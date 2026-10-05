@@ -1,7 +1,7 @@
 import "server-only";
 import { and, asc, eq, gt, isNull, sql } from "drizzle-orm";
 import { db } from "@/db/client";
-import { letters, photos, readerLetters, timelinePhotos } from "@/db/schema";
+import { letters, photos, readerLetters } from "@/db/schema";
 import { deleteStoredPhotos } from "./storage";
 
 // ---------------------------------------------------------------------------
@@ -61,20 +61,14 @@ export async function nextScheduledUnlock(): Promise<Date | null> {
   return row?.unlockAt ?? null;
 }
 
-/** Whether the reader may load this photo: it is on the timeline or on an unlocked letter. */
+/** Whether the reader may load this photo: only if it belongs to an unlocked letter. */
 export async function readerCanSeePhoto(photoId: string): Promise<boolean> {
   const [onLetter] = await db
     .select({ id: readerLetters.id })
     .from(readerLetters)
     .where(eq(readerLetters.photoId, photoId))
     .limit(1);
-  if (onLetter) return true;
-  const [onTimeline] = await db
-    .select({ id: timelinePhotos.photoId })
-    .from(timelinePhotos)
-    .where(eq(timelinePhotos.photoId, photoId))
-    .limit(1);
-  return Boolean(onTimeline);
+  return Boolean(onLetter);
 }
 
 // ---------------------------------------------------------------------------

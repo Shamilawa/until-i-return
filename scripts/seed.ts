@@ -1,13 +1,13 @@
 /**
  * Sample data for local testing: a few letters (read, unread, opening in a few
- * minutes, and locked for coming weeks) plus the "day we met" timeline entry.
+ * minutes, and locked for coming weeks).
  * Run with: npm run db:seed
  * Use "Wipe everything" in the admin settings to clear it afterwards.
  */
 import { config } from "dotenv";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { letters, settings, timelineEntries } from "../src/db/schema";
+import { letters, settings } from "../src/db/schema";
 import { DEFAULT_SETTINGS, PEOPLE } from "../src/lib/config";
 import { nextUnlockSlot } from "../src/lib/time";
 
@@ -55,14 +55,7 @@ async function main() {
     { title: "Week three apart", body: "Sample locked letter. She cannot read this until it opens.", unlockAt: week3 },
   ]);
 
-  await db.insert(timelineEntries).values({
-    happenedOn: DEFAULT_SETTINGS.metOn,
-    title: "The day we met",
-    caption: "Where our story begins.",
-    createdBy: "author",
-  });
-
-  console.log("Seeded 6 letters and 1 timeline entry.");
+  console.log("Seeded 6 letters.");
 }
 
 main()

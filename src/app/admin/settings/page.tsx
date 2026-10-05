@@ -30,7 +30,7 @@ export default async function SettingsPage() {
           action={resetActivity}
           word="RESET"
           title="Reset her activity"
-          description="Every letter looks unopened again: clears read status, hearts and replies. Your letters and the timeline stay."
+          description="Every letter looks unopened again: clears read status, hearts and replies. Your letters stay."
           button="Reset activity"
         />
         <hr className="border-white/80" />
@@ -38,7 +38,7 @@ export default async function SettingsPage() {
           action={wipeAll}
           word="WIPE"
           title="Wipe everything"
-          description="Deletes all letters, timeline entries and photos, and puts the dates, schedule and sweet messages back to their defaults."
+          description="Deletes all letters and photos, and puts the dates, schedule and sweet messages back to their defaults."
           button="Wipe everything"
         />
       </section>

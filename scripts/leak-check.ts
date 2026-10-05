@@ -74,7 +74,7 @@ async function main() {
 
     for (const rsc of [false, true]) {
       const kind = rsc ? "RSC payload" : "HTML";
-      for (const path of ["/", "/letters", "/story"]) {
+      for (const path of ["/", "/letters"]) {
         const res = await fetchAs(reader, path, rsc);
         check(`reader ${path} ${kind} has no locked content`, res.status === 200 && !leaks(res.text), `status ${res.status}`);
       }

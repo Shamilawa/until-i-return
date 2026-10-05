@@ -1,17 +1,17 @@
 # Until I'm Home
 
-A small private app for two people spending six months apart: a countdown to the reunion, a weekly letter that unlocks every Sunday at 08:00 Sri Lanka time, and (Phase 2) a shared story timeline.
+A small private app for two people spending six months apart: a countdown to the reunion, a weekly letter that unlocks every Sunday at 08:00 Sri Lanka time.
 
 Built with Next.js (App Router), TypeScript, Tailwind CSS, Motion, Drizzle ORM on Postgres (Neon via Vercel), and Vercel Blob for photos.
 
-## What works today (Phase 1)
+## What it does
 
 - Sign-in for exactly two fixed accounts: the **author** (writes letters) and the **reader** (opens them)
 - Home: live countdown, flight path with a plane at the % of time apart that has passed, both local times, rotating sweet messages, timer to the next letter
 - Letterbox: locked envelopes with a countdown, glowing unread envelopes with an opening animation, reread any time
 - Admin (author only, the "Write" tab): write and schedule letters in Markdown with an optional photo, edit dates and sweet messages, two reset buttons
 
-Still to come: the Our Story timeline (Phase 2); night sky, celebration screen, home-screen install, hearts and replies, notifications (Phase 3).
+Possible later additions: night sky, celebration screen, home-screen install, hearts and replies, notifications.
 
 ## Run it locally
 
@@ -69,8 +69,8 @@ The **Letters** tab shows you the letterbox exactly as she sees it. Opening a le
 
 **Write → Settings → After testing**:
 
-- **Reset her activity** (type `RESET`): every letter looks unopened again. Letters and timeline stay.
-- **Wipe everything** (type `WIPE`): deletes all letters, timeline entries and photos, and restores the default dates, schedule and sweet messages.
+- **Reset her activity** (type `RESET`): every letter looks unopened again. The letters themselves stay.
+- **Wipe everything** (type `WIPE`): deletes all letters and photos, and restores the default dates, schedule and sweet messages.
 
 Neither can be undone.
 

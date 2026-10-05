@@ -19,11 +19,6 @@ const TABS: Tab[] = [
     icon: <path d="M3.5 6.5h17v11h-17zM3.5 7l8.5 6.5L20.5 7" />,
   },
   {
-    href: "/story",
-    label: "Our Story",
-    icon: <path d="M12 6.5c-2-1.6-4.6-2-8-2v13c3.4 0 6 .4 8 2 2-1.6 4.6-2 8-2v-13c-3.4 0-6 .4-8 2zM12 6.5v13" />,
-  },
-  {
     href: "/admin",
     label: "Write",
     authorOnly: true,
