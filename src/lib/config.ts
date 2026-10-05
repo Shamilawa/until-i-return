@@ -14,10 +14,21 @@ export const WAITING_MESSAGE = {
   insideTitle: "What's waiting inside",
   inside: [
     { emoji: "⏳", text: "A countdown to the day I'm home" },
-    { emoji: "💌", text: "A letter from me every Sunday morning" },
+    {
+      emoji: "💌",
+      text: "A letter from me every Sunday morning, something to look forward to every week so the time passes quickly",
+    },
     { emoji: "✨", text: "A little note from me every time you open it" },
   ],
 };
+
+/**
+ * Body of a letter created by "Fill every letter day". It marks the letter as
+ * not written yet in the admin list, and is what she reads if one opens before
+ * it has been replaced, so it has to be safe to read.
+ */
+export const PLACEHOLDER_LETTER_BODY =
+  "This week's letter is still on its way to you.\n\nI haven't finished writing it yet, but I'm thinking of you right now. Come back a little later. 💛";
 
 export const DEFAULT_SETTINGS = {
   metOn: "2026-09-23",

@@ -2,6 +2,9 @@ import "server-only";
 import { and, asc, eq, gt, isNull, sql } from "drizzle-orm";
 import { db } from "@/db/client";
 import { letters, photos, readerLetters } from "@/db/schema";
+import { PLACEHOLDER_LETTER_BODY } from "@/lib/config";
+import { unlockSlotsBetween } from "@/lib/time";
+import { getSettings } from "./settings";
 import { deleteStoredPhotos } from "./storage";
 
 // ---------------------------------------------------------------------------
@@ -103,6 +106,25 @@ export async function updateLetter(id: string, input: LetterInput): Promise<void
     .update(letters)
     .set({ ...input, updatedAt: sql`now()` })
     .where(eq(letters.id, id));
+}
+
+/**
+ * Creates a placeholder letter on every letter day from now until the reunion
+ * that has no letter yet, so her letterbox shows the whole run of sealed
+ * envelopes. Returns how many were added.
+ */
+export async function fillLetterDays(): Promise<number> {
+  const settings = await getSettings();
+  const taken = new Set((await listUnlockTimes()).map((d) => d.getTime()));
+  const schedule = { weekday: settings.letterWeekday, time: settings.letterTime, timezone: settings.timezone };
+  const free = unlockSlotsBetween(new Date(), settings.reunionAt, schedule).filter((slot) => !taken.has(slot.getTime()));
+  if (free.length === 0) return 0;
+
+  const weekOf = (slot: Date) => Math.max(1, Math.ceil((slot.getTime() - settings.leaveAt.getTime()) / (7 * 86_400_000)));
+  await db
+    .insert(letters)
+    .values(free.map((unlockAt) => ({ title: `Week ${weekOf(unlockAt)}`, body: PLACEHOLDER_LETTER_BODY, unlockAt })));
+  return free.length;
 }
 
 export async function deleteLetter(id: string): Promise<void> {

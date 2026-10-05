@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { z } from "zod";
+import { PLACEHOLDER_LETTER_BODY } from "@/lib/config";
 import { toZonedInput } from "@/lib/time";
 import { getLetterForAuthor } from "@/server/letters";
 import { requireAuthor } from "@/server/session";
@@ -21,7 +22,13 @@ export default async function EditLetterPage({ params }: PageProps<"/admin/lette
         <p className="card p-3 text-sm text-ink">She has already read this one. Changes will show if she rereads it.</p>
       )}
       <LetterForm
-        letter={{ id: letter.id, title: letter.title, body: letter.body, photoId: letter.photoId }}
+        // A placeholder opens with an empty page, ready to be written.
+        letter={{
+          id: letter.id,
+          title: letter.title,
+          body: letter.body === PLACEHOLDER_LETTER_BODY ? "" : letter.body,
+          photoId: letter.photoId,
+        }}
         defaultUnlockAt={toZonedInput(letter.unlockAt, settings.timezone)}
       />
     </>

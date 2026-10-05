@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { PEOPLE } from "@/lib/config";
+import { PEOPLE, PLACEHOLDER_LETTER_BODY } from "@/lib/config";
 import { formatInZone } from "@/lib/time";
 import { listLettersForAuthor, type Letter } from "@/server/letters";
 import { requireAuthor } from "@/server/session";
 import { getSettings } from "@/server/settings";
+import { FillLettersButton } from "./FillLettersButton";
 
 export default async function AdminLettersPage() {
   await requireAuthor();
@@ -19,6 +20,8 @@ export default async function AdminLettersPage() {
           + Write
         </Link>
       </header>
+
+      <FillLettersButton />
 
       {letters.length === 0 ? (
         <EmptyState emoji="🖋️" title="Nothing written yet">
@@ -51,6 +54,10 @@ export default async function AdminLettersPage() {
 }
 
 function Status({ letter, now }: { letter: Letter; now: Date }) {
+  // A placeholder still waiting for its real words.
+  if (letter.body === PLACEHOLDER_LETTER_BODY && !letter.firstOpenedAt) {
+    return <span className="shrink-0 rounded-full bg-seal/15 px-3 py-0.5 text-xs font-bold text-seal">Not written</span>;
+  }
   const [label, tone] = letter.firstOpenedAt
     ? ["Read", "bg-gold/30"]
     : letter.unlockAt <= now

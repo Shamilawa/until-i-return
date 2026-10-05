@@ -32,6 +32,13 @@ export function nextFreeSlot(taken: Date[], schedule: LetterSchedule, now: Date)
   return slot;
 }
 
+/** Every scheduled unlock moment after `after` and before `until`. */
+export function unlockSlotsBetween(after: Date, until: Date, schedule: LetterSchedule): Date[] {
+  const slots: Date[] = [];
+  for (let slot = nextUnlockSlot(after, schedule); slot < until; slot = nextUnlockSlot(slot, schedule)) slots.push(slot);
+  return slots;
+}
+
 export interface Progress {
   /** 0..1 share of the time apart that has passed */
   fraction: number;

@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { fromZonedInput, nextFreeSlot, nextUnlockSlot, separationProgress, splitDuration, toZonedInput } from "./time";
+import {
+  fromZonedInput,
+  nextFreeSlot,
+  nextUnlockSlot,
+  separationProgress,
+  splitDuration,
+  toZonedInput,
+  unlockSlotsBetween,
+} from "./time";
 
 const sunday8 = { weekday: 0, time: "08:00", timezone: "Asia/Colombo" };
 
@@ -31,6 +39,19 @@ describe("nextFreeSlot", () => {
     const taken = [new Date("2026-10-11T02:30:00Z"), new Date("2026-10-18T02:30:00Z")];
     const slot = nextFreeSlot(taken, sunday8, new Date("2026-10-09T12:00:00Z"));
     expect(slot.toISOString()).toBe("2026-10-25T02:30:00.000Z");
+  });
+});
+
+describe("unlockSlotsBetween", () => {
+  it("lists every Sunday from the leave date to the reunion", () => {
+    const slots = unlockSlotsBetween(new Date("2026-10-08T18:30:00Z"), new Date("2027-04-08T18:30:00Z"), sunday8);
+    expect(slots).toHaveLength(26);
+    expect(slots[0].toISOString()).toBe("2026-10-11T02:30:00.000Z");
+    expect(slots[25].toISOString()).toBe("2027-04-04T02:30:00.000Z");
+  });
+
+  it("is empty when the reunion comes before the next letter day", () => {
+    expect(unlockSlotsBetween(new Date("2027-04-05T00:00:00Z"), new Date("2027-04-08T18:30:00Z"), sunday8)).toEqual([]);
   });
 });
 

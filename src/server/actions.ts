@@ -11,6 +11,7 @@ import {
   createPhoto,
   deleteLetter,
   deletePhoto,
+  fillLetterDays,
   getLetterForAuthor,
   markOpened,
   updateLetter,
@@ -100,6 +101,18 @@ export async function removeLetter(formData: FormData): Promise<void> {
   if (id.success) await deleteLetter(id.data);
   revalidatePath("/", "layout");
   redirect("/admin");
+}
+
+export async function fillLetters(): Promise<FormState> {
+  await requireAuthor();
+  const added = await fillLetterDays();
+  revalidatePath("/", "layout");
+  return {
+    success:
+      added === 0
+        ? "Every letter day until the reunion already has a letter."
+        : `Added ${added} placeholder ${added === 1 ? "letter" : "letters"}. Replace each one before it opens.`,
+  };
 }
 
 /** Called when she breaks the seal. Only the reader's opening counts as "read". */
