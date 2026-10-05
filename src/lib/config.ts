@@ -9,10 +9,13 @@ export type Role = keyof typeof PEOPLE;
 /** What she sees before the journey starts. */
 export const WAITING_MESSAGE = {
   title: "Something is waiting for you",
-  lines: [
-    "A little world made just for you is almost ready.",
-    "It opens the moment my plane leaves the ground.",
-    "Until then, I'm still right here beside you.",
+  intro: "I made a little world just for you. It stays closed while I'm still beside you.",
+  instruction: "Refresh this page as soon as I leave the ground.",
+  insideTitle: "What's waiting inside",
+  inside: [
+    { emoji: "⏳", text: "A countdown to the day I'm home" },
+    { emoji: "💌", text: "A letter from me every Sunday morning" },
+    { emoji: "✨", text: "A little note from me every time you open it" },
   ],
 };
 
