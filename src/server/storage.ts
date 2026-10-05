@@ -7,7 +7,10 @@ import { del, get, put } from "@vercel/blob";
 // Without a Blob token (local dev) photos live on disk under .data/uploads.
 const LOCAL_PREFIX = "local:";
 const LOCAL_DIR = path.join(process.cwd(), ".data", "uploads");
-const blobEnabled = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+// On Vercel always use Blob: the store may authenticate with a token or with
+// BLOB_STORE_ID + OIDC, and the deployment's disk is read-only anyway.
+const blobEnabled = () =>
+  Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID || process.env.VERCEL);
 
 // Stays under the server action body limit in next.config.ts.
 export const MAX_PHOTO_BYTES = 3 * 1024 * 1024;

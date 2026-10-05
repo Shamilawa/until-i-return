@@ -73,7 +73,15 @@ export async function saveLetter(_prev: FormState, formData: FormData): Promise<
   const file = formData.get("photo");
   if (file instanceof File && file.size > 0) {
     if (!isAcceptablePhoto(file)) return { error: "The photo must be a JPEG, PNG or WebP under 3 MB." };
-    photoId = await createPhoto(await storePhoto(file), file.type);
+    let blobUrl: string;
+    try {
+      blobUrl = await storePhoto(file);
+    } catch (error) {
+      // Author-only screen: show the real reason instead of a blank 500.
+      console.error("Photo upload failed", error);
+      return { error: `The photo couldn't be saved: ${error instanceof Error ? error.message : "unknown error"}` };
+    }
+    photoId = await createPhoto(blobUrl, file.type);
   } else if (formData.get("removePhoto") === "on") {
     photoId = null;
   }
