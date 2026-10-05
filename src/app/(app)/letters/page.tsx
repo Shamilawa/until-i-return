@@ -28,8 +28,9 @@ export default async function LetterboxPage() {
         </EmptyState>
       ) : (
         <>
-          <Section title="Waiting for you" items={locked} />
+          {/* Readable letters first: the sealed ones can run to 26 envelopes. */}
           <Section title="Yours to read" items={unlocked} />
+          <Section title="Waiting for you" items={locked} />
         </>
       )}
     </>
