@@ -64,6 +64,11 @@ export async function nextScheduledUnlock(): Promise<Date | null> {
   return row?.unlockAt ?? null;
 }
 
+/** How many letters exist in total. A number only, shown as a teaser before take-off. */
+export async function countLetters(): Promise<number> {
+  return db.$count(letters);
+}
+
 /** Whether the reader may load this photo: only if it belongs to an unlocked letter. */
 export async function readerCanSeePhoto(photoId: string): Promise<boolean> {
   const [onLetter] = await db

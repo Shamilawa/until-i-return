@@ -20,6 +20,16 @@ export const WAITING_MESSAGE = {
     },
     { emoji: "✨", text: "A little note from me every time you open it" },
   ],
+  sealedTag: "Sealed until take-off",
+  // Small teasers that rotate under the list. They hint; they never give anything away.
+  hints: [
+    "Psst… one of the envelopes is meant for your very first Sunday without me.",
+    "Something in here changes every single second.",
+    "There's a tiny plane inside. Watch where it goes.",
+    "Every envelope has a day written on it. None of them will open early.",
+    "I started writing before I even packed my bag.",
+    "No peeking. I'll know. 😌",
+  ],
 };
 
 /**

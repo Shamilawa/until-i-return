@@ -6,14 +6,14 @@ import { WaitingScreen } from "@/components/countdown/WaitingScreen";
 import { PEOPLE } from "@/lib/config";
 import { nextUnlockSlot } from "@/lib/time";
 import { logout } from "@/server/actions";
-import { nextScheduledUnlock } from "@/server/letters";
+import { countLetters, nextScheduledUnlock } from "@/server/letters";
 import { requireRole } from "@/server/session";
 import Link from "next/link";
 import { getSettings, isHiddenFrom } from "@/server/settings";
 
 export default async function HomePage() {
   const role = await requireRole();
-  if (await isHiddenFrom(role)) return <WaitingScreen />;
+  if (await isHiddenFrom(role)) return <WaitingScreen sealedCount={await countLetters()} />;
 
   const [settings, scheduled] = await Promise.all([getSettings(), nextScheduledUnlock()]);
 
