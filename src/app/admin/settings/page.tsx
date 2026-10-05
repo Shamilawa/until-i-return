@@ -1,8 +1,10 @@
-import { toZonedInput } from "@/lib/time";
 import { resetActivity, wipeAll } from "@/server/actions";
 import { requireAuthor } from "@/server/session";
 import { getSettings } from "@/server/settings";
+import { PEOPLE } from "@/lib/config";
+import { formatInZone, toZonedInput } from "@/lib/time";
 import { ConfirmForm } from "./ConfirmForm";
+import { JourneyControl } from "./JourneyControl";
 import { SettingsForm } from "./SettingsForm";
 
 export default async function SettingsPage() {
@@ -12,6 +14,14 @@ export default async function SettingsPage() {
   return (
     <>
       <h1 className="px-1 font-display text-2xl font-semibold text-ink">Settings</h1>
+      <JourneyControl
+        readerName={PEOPLE.reader.name}
+        startedLabel={
+          settings.journeyStartedAt
+            ? formatInZone(settings.journeyStartedAt, settings.timezone, "EEE d MMM, h:mm a")
+            : null
+        }
+      />
       <SettingsForm
         metOn={settings.metOn}
         leaveAt={toZonedInput(settings.leaveAt, settings.timezone)}
@@ -38,7 +48,7 @@ export default async function SettingsPage() {
           action={wipeAll}
           word="WIPE"
           title="Wipe everything"
-          description="Deletes all letters and photos, and puts the dates, schedule and sweet messages back to their defaults."
+          description="Deletes all letters and photos, and puts the dates, schedule and sweet messages back to their defaults. She goes back to the waiting screen."
           button="Wipe everything"
         />
       </section>

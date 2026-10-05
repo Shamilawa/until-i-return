@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
 import { LetterReveal } from "@/components/letters/LetterReveal";
 import { PaperCard } from "@/components/letters/PaperCard";
@@ -7,9 +7,11 @@ import { PEOPLE } from "@/lib/config";
 import { formatInZone } from "@/lib/time";
 import { getOpenLetter } from "@/server/letters";
 import { requireRole } from "@/server/session";
+import { isHiddenFrom } from "@/server/settings";
 
 export default async function LetterPage({ params }: PageProps<"/letters/[id]">) {
-  await requireRole();
+  const role = await requireRole();
+  if (await isHiddenFrom(role)) redirect("/");
   const { id } = await params;
   if (!z.uuid().safeParse(id).success) notFound();
 

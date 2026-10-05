@@ -17,7 +17,7 @@ import {
 } from "./letters";
 import { resetReaderActivity, wipeEverything } from "./reset";
 import { createSession, destroySession, getRole, requireAuthor } from "./session";
-import { getSettings, updateSettings } from "./settings";
+import { getSettings, isHiddenFrom, setJourneyStarted, updateSettings } from "./settings";
 import { isAcceptablePhoto, storePhoto } from "./storage";
 
 const zonedDateTime = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, "Pick a date and time");
@@ -104,7 +104,7 @@ export async function removeLetter(formData: FormData): Promise<void> {
 
 /** Called when she breaks the seal. Only the reader's opening counts as "read". */
 export async function openLetter(id: string): Promise<void> {
-  if ((await getRole()) !== "reader") return;
+  if ((await getRole()) !== "reader" || (await isHiddenFrom("reader"))) return;
   if (!z.uuid().safeParse(id).success) return;
   await markOpened(id);
   revalidatePath("/letters");
@@ -145,6 +145,22 @@ export async function saveSettings(_prev: FormState, formData: FormData): Promis
   });
   revalidatePath("/", "layout");
   return { success: "Saved." };
+}
+
+// --- Journey ----------------------------------------------------------------
+
+/** Take-off: from now on she sees the countdown and her letters instead of the waiting screen. */
+export async function startJourney(): Promise<void> {
+  await requireAuthor();
+  await setJourneyStarted(true);
+  revalidatePath("/", "layout");
+}
+
+/** Puts her back on the waiting screen. Letters and read status are untouched. */
+export async function hideJourney(): Promise<void> {
+  await requireAuthor();
+  await setJourneyStarted(false);
+  revalidatePath("/", "layout");
 }
 
 // --- Reset ------------------------------------------------------------------

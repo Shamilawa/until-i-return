@@ -12,6 +12,8 @@ export const settings = pgTable("settings", {
   letterTime: text("letter_time").notNull(),
   timezone: text("timezone").notNull(),
   sweetMessages: text("sweet_messages").array().notNull(),
+  // Null until the author presses "Start the journey"; the reader sees only a waiting screen before that.
+  journeyStartedAt: timestamptz("journey_started_at"),
 });
 
 export const photos = pgTable("photos", {

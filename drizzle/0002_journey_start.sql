@@ -1,0 +1,1 @@
+ALTER TABLE "settings" ADD COLUMN "journey_started_at" timestamp with time zone;

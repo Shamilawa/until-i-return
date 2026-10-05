@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { getPhoto, readerCanSeePhoto } from "@/server/letters";
 import { getRole } from "@/server/session";
+import { isHiddenFrom } from "@/server/settings";
 import { readPhoto } from "@/server/storage";
 
 const notFound = () => new Response(null, { status: 404 });
@@ -13,7 +14,7 @@ export async function GET(_request: Request, ctx: RouteContext<"/api/photos/[id]
 
   const { id } = await ctx.params;
   if (!z.uuid().safeParse(id).success) return notFound();
-  if (role === "reader" && !(await readerCanSeePhoto(id))) return notFound();
+  if (role === "reader" && ((await isHiddenFrom(role)) || !(await readerCanSeePhoto(id)))) return notFound();
 
   const photo = await getPhoto(id);
   const data = photo && (await readPhoto(photo.blobUrl));

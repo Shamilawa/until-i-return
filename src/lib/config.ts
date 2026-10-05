@@ -6,6 +6,16 @@ export const PEOPLE = {
 
 export type Role = keyof typeof PEOPLE;
 
+/** What she sees before the journey starts. */
+export const WAITING_MESSAGE = {
+  title: "Something is waiting for you",
+  lines: [
+    "A little world made just for you is almost ready.",
+    "It opens the moment my plane leaves the ground.",
+    "Until then, I'm still right here beside you.",
+  ],
+};
+
 export const DEFAULT_SETTINGS = {
   metOn: "2026-09-23",
   // Midnight in Sri Lanka (UTC+5:30) on the day, stored as UTC instants.
@@ -14,6 +24,7 @@ export const DEFAULT_SETTINGS = {
   letterWeekday: 0, // Sunday
   letterTime: "08:00",
   timezone: "Asia/Colombo",
+  journeyStartedAt: null as Date | null,
   sweetMessages: [
     "Every sunrise is one less without you. 🌅",
     "Same moon, same sky, same us. 🌙",

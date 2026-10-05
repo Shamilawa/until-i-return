@@ -1,10 +1,13 @@
 import { EnvelopeCard } from "@/components/letters/EnvelopeCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { listEnvelopes } from "@/server/letters";
+import { redirect } from "next/navigation";
 import { requireRole } from "@/server/session";
+import { isHiddenFrom } from "@/server/settings";
 
 export default async function LetterboxPage() {
   const role = await requireRole();
+  if (await isHiddenFrom(role)) redirect("/");
   // Both of us see the letterbox exactly as she does: locked letters carry no title or text.
   const envelopes = await listEnvelopes();
   const unlocked = envelopes.filter((e) => e.isUnlocked).reverse();

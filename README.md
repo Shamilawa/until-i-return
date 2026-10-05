@@ -58,6 +58,12 @@ Once signed in, a phone stays signed in for about 200 days.
 
 The **Letters** tab shows you the letterbox exactly as she sees it. Opening a letter as the author does not mark it as read.
 
+## Before take-off
+
+Until the author taps **Start the journey** (Write -> Settings), the reader sees only a waiting screen: no countdown, no letterbox, no photos, even for letters whose time has passed. The author sees everything as normal, with a reminder on the home screen. Her waiting screen checks every 20 seconds and opens by itself once the journey starts.
+
+**Hide it from her again** puts the waiting screen back, and so does **Wipe everything**. The waiting text lives in `WAITING_MESSAGE` in `src/lib/config.ts`.
+
 ## How letters stay locked
 
 - The browser never talks to the database. All queries live in `src/server/` and are marked `server-only`.
