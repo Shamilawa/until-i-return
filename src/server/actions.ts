@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import type { FormState, LoginState } from "@/lib/form-state";
 import { fromZonedInput } from "@/lib/time";
-import { MAX_ENTRY_PHOTOS } from "@/lib/timeline";
 import { verifyCredentials } from "./auth";
 import {
   createLetter,
@@ -17,10 +16,9 @@ import {
   updateLetter,
 } from "./letters";
 import { resetReaderActivity, wipeEverything } from "./reset";
-import { createSession, destroySession, getRole, requireAuthor, requireRole } from "./session";
+import { createSession, destroySession, getRole, requireAuthor } from "./session";
 import { getSettings, updateSettings } from "./settings";
-import { deleteStoredPhotos, isAcceptablePhoto, storePhoto } from "./storage";
-import { createTimelineEntry, deleteTimelineEntry, getTimelineEntry, updateTimelineEntry } from "./timeline";
+import { isAcceptablePhoto, storePhoto } from "./storage";
 
 const zonedDateTime = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/, "Pick a date and time");
 
@@ -110,75 +108,6 @@ export async function openLetter(id: string): Promise<void> {
   if (!z.uuid().safeParse(id).success) return;
   await markOpened(id);
   revalidatePath("/letters");
-}
-
-// --- Our story --------------------------------------------------------------
-
-// All photos of an entry travel in one request; keep it under the body limit in next.config.ts.
-const MAX_ENTRY_UPLOAD_BYTES = 3.5 * 1024 * 1024;
-
-const entrySchema = z.object({
-  id: z.uuid().optional(),
-  happenedOn: z.iso.date("Pick the date it happened"),
-  title: z.string().trim().min(1, "Give the moment a title").max(120),
-  caption: z.string().trim().max(600),
-  location: z.string().trim().max(120),
-});
-
-/** Either of us can add a moment. Only the person who added it can edit it. */
-export async function saveEntry(_prev: FormState, formData: FormData): Promise<FormState> {
-  const role = await requireRole();
-  const parsed = entrySchema.safeParse({
-    id: formData.get("id") || undefined,
-    happenedOn: formData.get("happenedOn"),
-    title: formData.get("title"),
-    caption: formData.get("caption") ?? "",
-    location: formData.get("location") ?? "",
-  });
-  if (!parsed.success) return { error: parsed.error.issues[0].message };
-  const fields = {
-    happenedOn: parsed.data.happenedOn,
-    title: parsed.data.title,
-    caption: parsed.data.caption || null,
-    location: parsed.data.location || null,
-  };
-
-  const existing = parsed.data.id ? await getTimelineEntry(parsed.data.id) : null;
-  if (parsed.data.id && (!existing || existing.createdBy !== role)) return { error: "You can only edit moments you added." };
-
-  const removeIds = formData.getAll("removePhoto").map(String);
-  const kept = existing ? existing.photoIds.filter((id) => !removeIds.includes(id)).length : 0;
-  const files = formData.getAll("photos").filter((f): f is File => f instanceof File && f.size > 0);
-  if (kept + files.length > MAX_ENTRY_PHOTOS) return { error: `A moment can hold up to ${MAX_ENTRY_PHOTOS} photos.` };
-  if (!files.every(isAcceptablePhoto)) return { error: "Photos must be JPEG, PNG or WebP." };
-  if (files.reduce((sum, f) => sum + f.size, 0) > MAX_ENTRY_UPLOAD_BYTES) {
-    return { error: "Those photos are too large together. Try adding fewer at once." };
-  }
-
-  const stored: { blobUrl: string; contentType: string }[] = [];
-  try {
-    for (const file of files) stored.push({ blobUrl: await storePhoto(file), contentType: file.type });
-  } catch (error) {
-    console.error("Photo upload failed", error);
-    await deleteStoredPhotos(stored.map((p) => p.blobUrl));
-    return { error: "The photos couldn't be saved. Please try again." };
-  }
-
-  if (existing) await updateTimelineEntry(existing, fields, removeIds, stored);
-  else await createTimelineEntry(fields, role, stored);
-
-  revalidatePath("/story");
-  redirect("/story");
-}
-
-/** The person who added a moment can delete it; the author can delete any. */
-export async function removeEntry(formData: FormData): Promise<void> {
-  const role = await requireRole();
-  const id = z.uuid().safeParse(formData.get("id"));
-  const entry = id.success ? await getTimelineEntry(id.data) : null;
-  if (entry && (entry.createdBy === role || role === "author")) await deleteTimelineEntry(entry);
-  revalidatePath("/story");
-  redirect("/story");
 }
 
 // --- Settings ---------------------------------------------------------------

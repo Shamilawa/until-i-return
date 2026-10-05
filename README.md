@@ -1,19 +1,17 @@
 # Until I'm Home
 
-A small private app for two people spending six months apart: a countdown to the reunion, a weekly letter that unlocks every Sunday at 08:00 Sri Lanka time, and a shared story timeline.
+A small private app for two people spending six months apart: a countdown to the reunion, a weekly letter that unlocks every Sunday at 08:00 Sri Lanka time, and (Phase 2) a shared story timeline.
 
 Built with Next.js (App Router), TypeScript, Tailwind CSS, Motion, Drizzle ORM on Postgres (Neon via Vercel), and Vercel Blob for photos.
 
-## What works today (Phases 1 and 2)
+## What works today (Phase 1)
 
 - Sign-in for exactly two fixed accounts: the **author** (writes letters) and the **reader** (opens them)
 - Home: live countdown, flight path with a plane at the % of time apart that has passed, both local times, rotating sweet messages, timer to the next letter
 - Letterbox: locked envelopes with a countdown, glowing unread envelopes with an opening animation, reread any time
 - Admin (author only, the "Write" tab): write and schedule letters in Markdown with an optional photo, edit dates and sweet messages, two reset buttons
 
-- Our Story: a timeline both of you add to, with up to 5 photos per moment, month dividers and a swipeable full-screen photo viewer
-
-Still to come (Phase 3): night sky, celebration screen, home-screen install, hearts and replies, notifications.
+Still to come: the Our Story timeline (Phase 2); night sky, celebration screen, home-screen install, hearts and replies, notifications (Phase 3).
 
 ## Run it locally
 
@@ -59,12 +57,6 @@ Once signed in, a phone stays signed in for about 200 days.
 4. **Seal and schedule**.
 
 The **Letters** tab shows you the letterbox exactly as she sees it. Opening a letter as the author does not mark it as read.
-
-## Our Story
-
-Either of you taps **+ Moment** on the Our Story tab and adds a date, title, optional words and place, and up to 5 photos. Photos are shrunk on the phone before upload. Moments are shown oldest first; ones dated from the leave date onwards are grouped under "Month N apart".
-
-Each of you can edit and remove the moments you added. The author can also remove (but not edit) the reader's moments.
 
 ## How letters stay locked
 
