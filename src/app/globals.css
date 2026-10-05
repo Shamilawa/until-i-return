@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+/* Storybook-sky palette. Swapping these variables is all the night theme needs. */
+:root {
+  --sky-top: #a8d4f7;
+  --sky-mid: #cfbdf3;
+  --sky-low: #ffd0c2;
+  --sky-base: #fff5e6;
+  --ink: #3b3260;
+  --ink-soft: #6d6591;
+  --glass: rgb(255 255 255 / 0.62);
+  --glass-border: rgb(255 255 255 / 0.8);
+  --cloud: rgb(255 255 255 / 0.85);
+}
+
+@theme inline {
+  --font-display: var(--font-fredoka), ui-rounded, system-ui, sans-serif;
+  --font-sans: var(--font-nunito), system-ui, sans-serif;
+
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-sky: #a8d4f7;
+  --color-lavender: #cfbdf3;
+  --color-peach: #ffd0c2;
+  --color-rose: #ff9fbd;
+  --color-rose-deep: #e8628f;
+  --color-cream: #fff5e6;
+  --color-paper: #fffaf0;
+  --color-gold: #f2b63c;
+  --color-seal: #d6455f;
+
+  --shadow-soft: 0 10px 30px -12px rgb(88 70 150 / 0.35);
+  --shadow-glow: 0 0 0 3px rgb(242 182 60 / 0.35), 0 12px 34px -8px rgb(242 182 60 / 0.6);
+
+  --animate-drift: drift 70s linear infinite;
+  --animate-twinkle: twinkle 3.2s ease-in-out infinite;
+  --animate-float: float 5s ease-in-out infinite;
+  --animate-glow: glow 2.4s ease-in-out infinite;
+}
+
+@keyframes drift {
+  from { transform: translateX(-40vw); }
+  to { transform: translateX(120vw); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes glow {
+  0%, 100% { filter: drop-shadow(0 0 4px rgb(242 182 60 / 0.5)); }
+  50% { filter: drop-shadow(0 0 14px rgb(242 182 60 / 0.95)); }
+}
+
+html {
+  background: var(--sky-base);
+}
+
+body {
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+}
+
+@layer components {
+  .card {
+    @apply rounded-3xl border p-5 shadow-soft backdrop-blur-md;
+    background: var(--glass);
+    border-color: var(--glass-border);
+  }
+
+  .btn {
+    @apply inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-full px-5 font-display text-base font-medium transition-transform duration-150 active:scale-95 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+  .btn-primary {
+    @apply bg-rose-deep text-white shadow-soft hover:brightness-105;
+  }
+  .btn-soft {
+    @apply border border-white/80 bg-white/70 text-ink hover:bg-white;
+  }
+  .btn-danger {
+    @apply bg-seal text-white hover:brightness-105;
+  }
+
+  .field-label {
+    @apply mb-1.5 block font-display text-sm font-medium text-ink;
+  }
+  .field {
+    @apply min-h-11 w-full rounded-2xl border border-white/90 bg-white/85 px-4 py-2.5 text-base text-ink outline-none placeholder:text-ink-soft/60 focus:border-rose focus:ring-2 focus:ring-rose/40;
+  }
+
+  /* Letter paper: warm cream with faint ruled lines and a soft deckled glow. */
+  .paper {
+    @apply rounded-2xl p-6 shadow-soft;
+    color: #4a3f35;
+    background:
+      radial-gradient(circle at 12% 8%, rgb(255 255 255 / 0.9), transparent 40%),
+      radial-gradient(circle at 90% 95%, rgb(244 214 170 / 0.35), transparent 45%),
+      repeating-linear-gradient(to bottom, transparent 0 31px, rgb(190 160 120 / 0.14) 31px 32px),
+      #fffaf0;
+    border: 1px solid rgb(226 204 170 / 0.7);
+  }
+
+  .letter-body {
+    @apply text-[1.05rem] leading-8;
+  }
+  .letter-body p { @apply mb-4; }
+  .letter-body h1, .letter-body h2, .letter-body h3 { @apply mb-2 mt-5 font-display text-xl font-semibold; }
+  .letter-body ul { @apply mb-4 list-disc pl-6; }
+  .letter-body ol { @apply mb-4 list-decimal pl-6; }
+  .letter-body blockquote { @apply mb-4 border-l-4 border-rose/60 pl-4 italic; }
+  .letter-body a { @apply text-rose-deep underline; }
+  .letter-body hr { @apply my-6 border-[#e2cca8]; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .sky-motion {
+    display: none;
+  }
+}
